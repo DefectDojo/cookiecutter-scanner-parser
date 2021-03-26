@@ -1,13 +1,3 @@
----
-title: "A DefectDojo scanner parser template generator"
-date: 2021-03-26T20:46:28+01:00
-draft: false
----
-
-{{% notice info %}}
-All commands assume that you're located at the root of the django-DefectDojo cloned repo.
-{{% /notice %}}
-
 A [cookiecutter](https://github.com/cookiecutter/cookiecutter) template for generating
 a new [DefectDojo](https://www.defectdojo.org/) scanner parser.
 
