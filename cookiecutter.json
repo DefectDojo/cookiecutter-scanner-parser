@@ -1,0 +1,8 @@
+{
+    "tool_name": "My Scanner",
+    "tool_directory_name": "{{ cookiecutter.tool_name|replace(' ', '_')|lower }}",
+    "tool_class_name": "{{ cookiecutter.tool_name|replace(' ', '') }}",
+    "tool_description": " My scanner is for ....",
+    "tool_type": ["Static", "Dynamic"],
+    "tool_file_type": ["CSV", "JSON", "XML"]
+}
