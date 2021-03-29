@@ -57,7 +57,7 @@ def update_json_file():
     print("Added:")
     print(json.dumps(new_scanner_json, indent=4))
     print("Removing temp directory")
-    shutil.rmtree(os.path.join(str(Path(WORKING).parent.absolute())), "temp-{{cookiecutter.tool_directory_name}}")
+    shutil.rmtree("../temp-{{cookiecutter.tool_directory_name}}")
     print("######################################")
     print("Complete, go forth and make it so!")
     print("######################################")
