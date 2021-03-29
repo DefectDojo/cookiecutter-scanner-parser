@@ -16,7 +16,7 @@ def update_json_file():
     maxNum = 0
     new_scanner_json = None
     tool_directory = "{{cookiecutter.tool_directory_name}}"
-    source = str(Path(WORKING).parent.absolute())
+    source = ""
     destination = '../dojo/'
     filename = '../dojo/fixtures/test_type.json'
 
@@ -56,8 +56,8 @@ def update_json_file():
     print("Modified: dojo/fixtures/test_type.json")
     print("Added:")
     print(json.dumps(new_scanner_json, indent=4))
-    #print("Removing temp directory")
-    #shutil.rmtree(source)
+    print("Removing temp directory")
+    shutil.rmtree(os.path.join(str(Path(WORKING).parent.absolute()), "temp-{{cookiecutter.tool_directory_name}}")
     print("######################################")
     print("Complete, go forth and make it so!")
     print("######################################")
