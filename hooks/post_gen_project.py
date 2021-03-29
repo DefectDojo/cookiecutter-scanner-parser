@@ -1,9 +1,10 @@
 import json
 import os
 import shutil
+from pathlib import Path
 
 WORKING = os.path.abspath(os.path.curdir)
-print("WORKING: " + WORKING)
+
 
 def main():
     rename_delete_unused_template()
@@ -15,9 +16,9 @@ def update_json_file():
     maxNum = 0
     new_scanner_json = None
     tool_directory = "{{cookiecutter.tool_directory_name}}"
-    source = ""
-    destination = '../dojo/'
-    filename = '../dojo/fixtures/test_type.json'
+    source = path.parent.absolute(WORKING)
+    destination = '/dojo/'
+    filename = '/dojo/fixtures/test_type.json'
 
     with open(filename) as test_fixtures:
         test_types = json.load(test_fixtures)
