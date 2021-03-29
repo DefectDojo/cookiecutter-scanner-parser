@@ -3,7 +3,7 @@ import os
 import shutil
 
 WORKING = os.path.abspath(os.path.curdir)
-
+print("WORKING: " + WORKING)
 
 def main():
     rename_delete_unused_template()
