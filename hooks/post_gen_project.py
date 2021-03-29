@@ -16,8 +16,8 @@ def update_json_file():
     new_scanner_json = None
     tool_directory = "{{cookiecutter.tool_directory_name}}"
     source = "temp-{{cookiecutter.tool_directory_name}}/"
-    destination = 'dojo/'
-    filename = 'dojo/fixtures/test_type.json'
+    destination = '../dojo/'
+    filename = '../dojo/fixtures/test_type.json'
 
     with open(filename) as test_fixtures:
         test_types = json.load(test_fixtures)
