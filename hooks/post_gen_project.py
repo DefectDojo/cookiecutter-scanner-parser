@@ -15,7 +15,7 @@ def update_json_file():
     maxNum = 0
     new_scanner_json = None
     tool_directory = "{{cookiecutter.tool_directory_name}}"
-    source = "temp-{{cookiecutter.tool_directory_name}}/"
+    source = ""
     destination = '../dojo/'
     filename = '../dojo/fixtures/test_type.json'
 
