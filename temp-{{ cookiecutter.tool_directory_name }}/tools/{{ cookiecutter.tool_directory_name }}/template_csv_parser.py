@@ -60,7 +60,7 @@ class {{ cookiecutter.tool_class_name }}Parser(object):
                 if finding.description is None:
                     finding.description = ""
 
-                key = hashlib.md5((finding.title + '|' + finding.description).encode("utf-8")).hexdigest()
+                key = hashlib.sha256((finding.title + '|' + finding.description).encode("utf-8")).hexdigest()
 
                 if key not in dupes:
                     dupes[key] = finding
