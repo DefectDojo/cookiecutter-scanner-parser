@@ -16,15 +16,12 @@ class {{ cookiecutter.tool_class_name }}Parser(object):
         return "{{ cookiecutter.tool_name }} Scan"
 
     def get_description_for_scan_types(self, scan_type):
-        return "{{ cookiecutter.tool_name }} report file can be imported in {{ cookiecutter.tool_file_type }} format."
+        return "{{ cookiecutter.tool_name }} report file can be imported in {{ cookiecutter.tool_file_type }} format (option --json)."
 
     def get_findings(self, file, test):
+        data = json.load(file)
+
         dupes = dict()
-        data = file.read()
-        try:
-            tree = json.loads(str(data, 'utf-8'))
-        except:
-            tree = json.loads(data)
         for content in tree:
             node = tree[content]
             if not node['pass']:
@@ -33,9 +30,6 @@ class {{ cookiecutter.tool_class_name }}Parser(object):
                             "**Result** : " + node['result'] + "\n\n" + \
                             "**expectation** : " + node['expectation'] + "\n"
                 severity = self.get_severity(int(node['score_modifier']))
-                mitigation = "N/A"
-                impact = "N/A"
-                references = "N/A"
                 output = node['output']
                 try:
                     url = output['destination']
@@ -52,44 +46,56 @@ class {{ cookiecutter.tool_class_name }}Parser(object):
                 except:
                     url = None
 
-                dupe_key = hashlib.md5(str(description + title).encode('utf-8')).hexdigest()
+                finding = Finding(
+                    title=title,
+                    test=test,
+                    description=description,
+                    severity=severity,
+{% if cookiecutter.tool_type == "Static" %}
+                    static_finding=True,
+                    dynamic_finding=False, 
+{% elif cookiecutter.tool_type == "Dynamic" %}
+                    static_finding=False,  
+                    dynamic_finding=True,  
+{%- endif -%}
+                )
 
+                # some attribute are optional
+                if 'mitigationFromTheTool' in node:
+                    finding.mitigation = node['mitigationFromTheTool']
+
+                # take a look at all the attributes possible in the documentation
+                # some are very usefull like
+                #  - date (DATE / date when the finding was detected)
+                #  - component_name (STRING / if the finding is liked to an external component ex: 'log4j')
+                #  - component_version (STRING / if the finding is liked to an external component ex: '1.2.13')
+                #  - file_path (STRING / if the finding is liked to a specfic file ex: 'src/foo.c')
+                #  - line (INTEGER / if the finding is liked to an specific file ex: 23)
+
+                # manage endpoint
+                finding.unsaved_endpoints = list()
+                if url is not None:
+                    finding.unsaved_endpoints.append(Endpoint(
+                            host=host, port=port,
+                            path=path,
+                            protocol=protocol,
+                            query=query, fragment=fragment))
+
+                # internal de-duplication
+                dupe_key = hashlib.sha256(str(description + title).encode('utf-8')).hexdigest()
                 if dupe_key in dupes:
-                    finding = dupes[dupe_key]
+                    find = dupes[dupe_key]
                     if finding.description:
-                        finding.description = finding.description
-                    dupes[dupe_key] = finding
+                        find.description += "\n" + finding.description
+                    find.unsaved_endpoints.extend(finding.unsaved_endpoints)
+                    dupes[dupe_key] = find
                 else:
-                    dupes[dupe_key] = True
-
-                    finding = Finding(title=title,
-                                    test=test,
-                                    active=False,
-                                    verified=False,
-                                    description=description,
-                                    severity=severity,
-                                    numerical_severity=Finding.get_numerical_severity(
-                                        severity),
-                                    mitigation=mitigation,
-                                    impact=impact,
-                                    references=references,
-                                    {% if cookiecutter.tool_type == "Static" %}static_finding=True,
-                                    dynamic_finding=False, 
-                                    {% elif cookiecutter.tool_type == "Dynamic" %}static_finding=False,  
-                                    dynamic_finding=True,  
-                                    {%- endif -%})
-                    finding.unsaved_endpoints = list()
                     dupes[dupe_key] = finding
 
-                    if url is not None:
-                        finding.unsaved_endpoints.append(Endpoint(
-                                host=host, port=port,
-                                path=path,
-                                protocol=protocol,
-                                query=query, fragment=fragment))
-        return dupes.values()
+        return list(dupes.values())
 
-    def get_severity(self, num_severity):
+    def convert_severity(self, num_severity):
+        """Convert severity value"""
         if num_severity >= -10:
             return "Low"
         elif -11 >= num_severity > -26:
