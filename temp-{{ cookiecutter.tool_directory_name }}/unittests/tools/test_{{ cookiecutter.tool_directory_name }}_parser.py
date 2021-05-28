@@ -10,9 +10,6 @@ class Test{{ cookiecutter.tool_name }}Parser(TestCase):
         parser = {{ cookiecutter.tool_name }}Parser()
         findings = parser.get_findings(testfile, Test())
         testfile.close()
-        for finding in findings:
-        for endpoint in finding.unsaved_endpoints:
-            endpoint.clean()
         self.assertEqual(0, len(findings))
 
     def test_{ cookiecutter.tool_name }}_parser_with_one_criticle_vuln_has_one_findings(self):
