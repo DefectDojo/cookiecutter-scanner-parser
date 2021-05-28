@@ -10,6 +10,9 @@ class Test{{ cookiecutter.tool_name }}Parser(TestCase):
         parser = {{ cookiecutter.tool_name }}Parser()
         findings = parser.get_findings(testfile, Test())
         testfile.close()
+        for finding in findings:
+        for endpoint in finding.unsaved_endpoints:
+            endpoint.clean()
         self.assertEqual(0, len(findings))
 
     def test_{ cookiecutter.tool_name }}_parser_with_one_criticle_vuln_has_one_findings(self):
@@ -17,6 +20,9 @@ class Test{{ cookiecutter.tool_name }}Parser(TestCase):
         parser = {{ cookiecutter.tool_name }}Parser()
         findings = parser.get_findings(testfile, Test())
         testfile.close()
+        for finding in findings:
+            for endpoint in finding.unsaved_endpoints:
+                endpoint.clean()
         self.assertEqual(1, len(findings))
         self.assertEqual("handlebars", findings[0].component_name)
         self.assertEqual("4.5.2", findings[0].component_version)
@@ -26,6 +32,9 @@ class Test{{ cookiecutter.tool_name }}Parser(TestCase):
         parser = {{ cookiecutter.tool_name }}Parser()
         findings = parser.get_findings(testfile, Test())
         testfile.close()
+        for finding in findings:
+            for endpoint in finding.unsaved_endpoints:
+                endpoint.clean()
         self.assertEqual(3, len(findings))
 
     def test_{ cookiecutter.tool_name }}_parser_empty_with_error(self):
@@ -34,6 +43,9 @@ class Test{{ cookiecutter.tool_name }}Parser(TestCase):
             parser = {{ cookiecutter.tool_name }}Parser()
             findings = parser.get_findings(testfile, Test())
             testfile.close()
+            for finding in findings:
+                for endpoint in finding.unsaved_endpoints:
+                    endpoint.clean()
             self.assertTrue(
                 "{{ cookiecutter.tool_name }} report contains errors:" in str(context.exception)
             )
