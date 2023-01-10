@@ -1,8 +1,9 @@
 {
     "tool_name": "My Scanner",
-    "tool_directory_name": "{{ cookiecutter.tool_name|replace(' ', '_')|lower }}",
-    "tool_class_name": "{{ cookiecutter.tool_name|replace(' ', '') }}",
+    "tool_api": ["n", "y"],
+    "tool_directory_name": "{% if cookiecutter.tool_api == 'y' %}api_{% endif %}{{ cookiecutter.tool_name|replace(' ', '_')|lower }}",
+    "tool_class_name": "{% if cookiecutter.tool_api == 'y' %}Api{% endif %}{{ cookiecutter.tool_name|replace(' ', '') }}",
     "tool_description": " My scanner is for ....",
     "tool_type": ["Static", "Dynamic"],
-    "tool_file_type": ["CSV", "JSON", "XML"]
+    "tool_file_type": ["JSON", "CSV", "XML"]
 }
