@@ -51,8 +51,14 @@ def update_json_file():
     print(unittests_destination + "unittests/scans")
     shutil.move(source + "unittests/scans/" + tool_directory, unittests_destination + "unittests/scans")
 
-    print(unittests_destination + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py")
-    shutil.move(source + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py", unittests_destination + "unittests/tools")
+    if "{{cookiecutter.tool_api}}" == "y":
+        print(unittests_destination + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py")
+        shutil.move(source + "unittests/tools/test_api_{{ cookiecutter.tool_directory_name }}_parser.py", unittests_destination + "unittests/tools")
+        print(unittests_destination + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_importer.py")
+        shutil.move(source + "unittests/tools/test_api_{{ cookiecutter.tool_directory_name }}_importer.py", unittests_destination + "unittests/tools")
+    else:
+        print(unittests_destination + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py")
+        shutil.move(source + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py", unittests_destination + "unittests/tools")
 
     print("Modified: dojo/fixtures/test_type.json")
     print("Added:")
@@ -72,10 +78,17 @@ def rename_delete_unused_template():
         base_prefix = 'template_'
         if filename.startswith(base_prefix):
             to_path = os.path.join(tool_directory, filename)
-            if filename == template_to_keep:
-                os.rename(to_path, os.path.join(tool_directory, "parser.py"))
+            if "{{cookiecutter.tool_api}}" == "y":
+                base_api_prefix = 'template_api_'
+                if filename.startswith(base_api_prefix):
+                    os.rename(to_path, os.path.join(tool_directory, filename[len(base_api_prefix):]))
+                else:
+                    os.unlink(to_path)
             else:
-                os.unlink(to_path)
+                if filename == template_to_keep:
+                    os.rename(to_path, os.path.join(tool_directory, "parser.py"))
+                else:
+                    os.unlink(to_path)
 
 
 if __name__ == '__main__':
