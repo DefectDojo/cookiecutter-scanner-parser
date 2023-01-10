@@ -18,6 +18,7 @@ def update_json_file():
     tool_directory = "{{cookiecutter.tool_directory_name}}"
     source = ""
     destination = '../dojo/'
+    unittests_destination = '../'
     filename = '../dojo/fixtures/test_type.json'
 
     with open(filename) as test_fixtures:
@@ -47,11 +48,11 @@ def update_json_file():
     print(destination + "tools")
     shutil.move(source + "tools/" + tool_directory, destination + "/tools")
 
-    print(destination + "unittests/scans")
-    shutil.move(source + "unittests/scans/" + tool_directory, destination + "unittests/scans")
+    print(unittests_destination + "unittests/scans")
+    shutil.move(source + "unittests/scans/" + tool_directory, unittests_destination + "unittests/scans")
 
-    print(destination + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py")
-    shutil.move(source + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py", destination + "unittests/tools")
+    print(unittests_destination + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py")
+    shutil.move(source + "unittests/tools/test_{{ cookiecutter.tool_directory_name }}_parser.py", unittests_destination + "unittests/tools")
 
     print("Modified: dojo/fixtures/test_type.json")
     print("Added:")
@@ -68,8 +69,6 @@ def rename_delete_unused_template():
     tool_directory = os.path.join(WORKING, "tools/{{cookiecutter.tool_directory_name}}")
     template_to_keep = "template_{{cookiecutter.tool_file_type}}".lower() + "_parser.py"
     for filename in os.listdir(tool_directory):
-        full_path = os.path.join(template_to_keep, filename)
-
         base_prefix = 'template_'
         if filename.startswith(base_prefix):
             to_path = os.path.join(tool_directory, filename)
